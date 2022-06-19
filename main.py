@@ -11,6 +11,8 @@ class App(QMainWindow):
         self.stream = Stream()
         self.stream.changeMap.connect(self.onPixmap)
         self.stream.isOpened.connect(self.isOpened)
+        self.stream.isValid.connect(self.isValid)
+        self.stream.onData.connect(self.onData)
         self.stream.start()
 
     def onPixmap(self, pixmap):
@@ -18,6 +20,21 @@ class App(QMainWindow):
 
     def isOpened(self, flag):
         pass
+
+    def isValid(self, result):
+        if result.status:
+            self.status.setText('Valid Input, ' + result.face + ' Face')
+        else:
+            self.status.setText('Invalid Input')
+
+    def onData(self, data):
+        if data.id != '': self.id.setText('ID: ' + data.id)
+        if data.surname != '': self.surname.setText('SURNAME: ' + data.surname)
+        if data.name != '': self.name.setText('NAME: ' + data.name)
+        if data.date != '': self.date.setText('DATE OF BIRTH: ' + data.date)
+        if data.documentNo != '': self.documentNo.setText('DOCUMENT NO: ' + data.documentNo)
+        if data.validDate != '': self.date.setText('VALID UNTIL: ' + data.validDate)
+        if data.gender != '': self.gender.setText('GENDER: ' + data.gender)
 
     def closeEvent(self, event):
         self.stream.terminate()
@@ -27,3 +44,4 @@ if __name__ == '__main__':
     window = App()
     window.show()
     sys.exit(app.exec())
+
